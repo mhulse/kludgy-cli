@@ -1,0 +1,33 @@
+{
+  "name": "kludgy-cli",
+  "version": "1.0.0",
+  "description": "CLI for kludgy",
+  "author": "Michael Hulse",
+  "license": "Apache 2.0",
+  "scripts": {
+    "test": "mocha",
+    "start": "node .",
+    "example": "node test/example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhulse/kludgy-cli.git"
+  },
+  "bin": {
+    "kludgy": "app/bridge.js"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "await-exec": "^0.1.2",
+    "colors": "^1.3.3",
+    "fs-extra": "^7.0.0",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "mocha": "^6.1.1"
+  }
+}
