@@ -1,13 +1,12 @@
 {
   "name": "kludgy-cli",
   "version": "1.0.0",
-  "description": "CLI for kludgy",
+  "description": "CLI for kludgy: https://github.com/mhulse/kludgy",
   "author": "Michael Hulse",
   "license": "Apache 2.0",
   "scripts": {
     "test": "mocha",
-    "start": "node .",
-    "example": "node test/example.js"
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -24,6 +23,7 @@
     "await-exec": "^0.1.2",
     "colors": "^1.3.3",
     "fs-extra": "^7.0.0",
+    "kludgy": "github:mhulse/kludgy",
     "yargs": "^13.2.2"
   },
   "devDependencies": {
