@@ -2,6 +2,7 @@
 
 import colors from 'colors';
 import pkg from '../package.json';
+import util from './util.js';
 
 module.exports = (() => {
 
@@ -11,11 +12,19 @@ module.exports = (() => {
 
       this._options = {};
 
-      this._icons = {
-        success: '✔',
-        warning: '⚠',
-        error: '❌',
-      };
+      this._allowed = {
+        fisheye: [
+          'both',
+          'big-sky',
+          'tiny-planet',
+          'random',
+        ],
+        debug: [
+          0,
+          1,
+          2,
+        ]
+      }
 
     }
 
@@ -43,11 +52,11 @@ module.exports = (() => {
           alias: [
             'f',
           ],
-          description: 'Fisheye? Choose one: `both`, `big-sky`, `tiny-planet` or `random`',
+          description: `Fisheye? Choose one: ${this._allowed.fisheye.join(', ')}`,
           type: 'string',
         })
         .option('debug', {
-          description: 'Debug? Choose one: `0`, `1` or `2`',
+          description: `Debug? Choose one: ${this._allowed.debug.join(', ')}`,
           type: 'number',
         })
         .alias('h', 'help')
@@ -63,41 +72,38 @@ module.exports = (() => {
 
     }
 
-    checkOptions () {
+    async checkOptions () {
 
-      //   utilities.o('log', `Google API key: ${ICONS.success.green}`);
+      const o = this._options;
+      const a = this._allowed;
+      const results = {
+        key: 'loaded'.green,
+        directory: 'default'.yellow,
+        fisheye: 'disabled'.yellow,
+        debug: 'off'.yellow,
+      };
 
-      //   utilities.o('log');
+      if (o.directory && (await util.dirExists(o.directory))) {
 
-      //   if (OPTIONS.output && utilities.dirExists(OPTIONS.output)) {
+        results.directory = o.directory.green;
 
-      //     OPTIONS.output = fs.realpathSync(OPTIONS.output);
+      }
 
-      //     utilities.o('log', `${ICONS.success} Chosen output directory:`.green, OPTIONS.output);
+      if (o.fisheye && a.fisheye.includes(o.fisheye)) {
 
-      //   } else {
+        results.fisheye = o.fisheye.green;
 
-      //     if (OPTIONS.output) {
+      }
 
-      //       utilities.o('error', `${ICONS.error} Chosen output directory does not exist:`.toUpperCase().red, OPTIONS.output);
+      if (o.debug && a.debug.includes(o.debug)) {
 
-      //     }
+        results.debug = o.debug.green;
 
-      //     OPTIONS.output = fs.realpathSync('./app/panos/');
+      }
 
-      //     utilities.o('log', `${ICONS.success} Using default output directory:`.yellow, OPTIONS.output);
-
-      //   }
-
-      //   if (OPTIONS.planet) {
-
-      //     utilities.o('log');
-
-      //     utilities.o('log', `${ICONS.success} Tiny planet mode enabled!`.green);
-
-      //   }
-
-      // }
+      for (const [key, value] of Object.entries(results)) {
+        console.log(`${key.bold.gray}: ${value}`);
+      }
 
       return this;
 
@@ -105,14 +111,14 @@ module.exports = (() => {
 
   }
 
-  const kludgy = new Kludgy();
+  (async () => {
 
-  console.log('Starting …');
+    const kludgy = new Kludgy();
 
-  kludgy
-    .getOptions()
-    .checkOptions();
+    await kludgy
+      .getOptions()
+      .checkOptions();
 
-  console.log('Done!');
+  })();
 
 })();
