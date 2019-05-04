@@ -3,14 +3,15 @@
 import colors from 'colors';
 import pkg from '../package.json';
 import util from './util.js';
+const Kludgy = require('kludgy');
 
 module.exports = (() => {
 
-  class Kludgy {
+  class KludgyCLI {
 
     constructor () {
 
-      this._options = {};
+      this._argv = {};
 
       this._allowed = {
         fisheye: [
@@ -23,14 +24,16 @@ module.exports = (() => {
           0,
           1,
           2,
-        ]
-      }
+        ],
+      };
+
+      this._options = {};
 
     }
 
     getOptions () {
 
-      const argv = require('yargs/yargs')(process.argv.slice(2))
+      this._argv = require('yargs/yargs')(process.argv.slice(2))
         .version(pkg.version)
         .usage(`Usage: $0 -k <Google Maps API key>`)
         .option('key', {
@@ -61,21 +64,13 @@ module.exports = (() => {
         })
         .alias('h', 'help')
         .help('h', 'Show help.')
+        .strict()
         .argv;
-
-      this._options.key = argv.key;
-      this._options.directory = (argv.directory ? argv.directory.replace(/\/+$/, '') : '');
-      this._options.fisheye = argv.fisheye;
-      this._options.debug = argv.debug;
-
-      return this;
 
     }
 
     async checkOptions () {
 
-      const o = this._options;
-      const a = this._allowed;
       const results = {
         key: 'loaded'.green,
         directory: 'default'.yellow,
@@ -83,21 +78,44 @@ module.exports = (() => {
         debug: 'off'.yellow,
       };
 
-      if (o.directory && (await util.dirExists(o.directory))) {
+      this._options.key = this._argv.key;
 
-        results.directory = o.directory.green;
+      if (
+        this._argv.directory
+        &&
+        (typeof this._argv.directory === 'string')
+        &&
+        (await util.dirExists(this._argv.directory))
+      ) {
+
+        this._options.directory = this._argv.directory;
+        results.directory = this._argv.directory.green;
 
       }
 
-      if (o.fisheye && a.fisheye.includes(o.fisheye)) {
+      if (
+        this._argv.fisheye
+        &&
+        (typeof this._argv.fisheye === 'string')
+        &&
+        this._allowed.fisheye.includes(this._argv.fisheye)
+      ) {
 
-        results.fisheye = o.fisheye.green;
+        this._options.fisheye = this._argv.fisheye;
+        results.fisheye = this._argv.fisheye.green;
 
       }
 
-      if (o.debug && a.debug.includes(o.debug)) {
+      if (
+        this._argv.debug
+        &&
+        (typeof this._argv.debug === 'number')
+        &&
+        this._argv.debug.includes(this._allowed.debug)
+      ) {
 
-        results.debug = o.debug.green;
+        this._options.debug = this._argv.debug;
+        results.debug = this._argv.debug.green;
 
       }
 
@@ -105,7 +123,25 @@ module.exports = (() => {
         console.log(`${key.bold.gray}: ${value}`);
       }
 
-      return this;
+    }
+
+    async callKludgy () {
+
+      const kludgy = new Kludgy(
+        this._options
+      );
+
+      console.log('before');
+
+      console.log(kludgy);
+
+      // try {
+      //   await kludgy.init();
+      // } catch (err) {
+      //   console.error(err);
+      // }
+
+      console.log('after');
 
     }
 
@@ -113,11 +149,11 @@ module.exports = (() => {
 
   (async () => {
 
-    const kludgy = new Kludgy();
+    const kludgyCLI = new KludgyCLI();
 
-    await kludgy
-      .getOptions()
-      .checkOptions();
+    kludgyCLI.getOptions();
+    kludgyCLI.checkOptions();
+    kludgyCLI.callKludgy();
 
   })();
 
