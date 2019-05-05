@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import colors from 'colors';
+import Kludgy from 'kludgy';
 import pkg from '../package.json';
 import util from './util.js';
-const Kludgy = require('kludgy');
 
 module.exports = (() => {
 
