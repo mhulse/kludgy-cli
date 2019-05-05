@@ -131,15 +131,23 @@ module.exports = (() => {
         this._options
       );
 
-      console.log('before');
+      console.log(this._options);
 
-      console.log(kludgy);
+      try {
 
-      // try {
-      //   await kludgy.init();
-      // } catch (err) {
-      //   console.error(err);
-      // }
+        await kludgy.init();
+
+      } catch (err) {
+
+        console.error(
+          'Exiting CLI due to error:'.red,
+          '\n',
+          err
+        );
+
+        process.exitCode = 1;
+
+      }
 
       console.log('after');
 
@@ -152,8 +160,8 @@ module.exports = (() => {
     const kludgyCLI = new KludgyCLI();
 
     kludgyCLI.getOptions();
-    kludgyCLI.checkOptions();
-    kludgyCLI.callKludgy();
+    await kludgyCLI.checkOptions();
+    await kludgyCLI.callKludgy();
 
   })();
 
