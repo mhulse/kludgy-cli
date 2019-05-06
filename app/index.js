@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import colors from 'colors';
+import 'colors';
 import Kludgy from 'kludgy';
+import yargs from 'yargs';
 import pkg from '../package.json';
 import util from './util.js';
 
@@ -33,7 +34,7 @@ module.exports = (() => {
 
     getOptions () {
 
-      this._argv = require('yargs/yargs')(process.argv.slice(2))
+      this._argv = yargs
         .version(pkg.version)
         .usage(`Usage: $0 -k <Google Maps API key>`)
         .option('key', {
@@ -111,11 +112,11 @@ module.exports = (() => {
         &&
         (typeof this._argv.debug === 'number')
         &&
-        this._argv.debug.includes(this._allowed.debug)
+        this._allowed.debug.includes(this._argv.debug)
       ) {
 
         this._options.debug = this._argv.debug;
-        results.debug = this._argv.debug.green;
+        results.debug = this._argv.debug.toString().green;
 
       }
 
