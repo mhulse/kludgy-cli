@@ -2,7 +2,7 @@
 
 Command Line Interface for [kludgy](https://github.com/mhulse/kludgy).
 
-While you can read about [Kludgy’s CLI in it’s WIKI](https://github.com/mhulse/kludgy/wiki), here’s how to get this code running on your macOS:
+While you can read about [Kludgy’s API in it’s WIKI](https://github.com/mhulse/kludgy/wiki), here’s how to get Kludgy’s CLI running on your macOS:
 
 ```bash
 # Install Kludgy’s CLI from GitHub directly:
