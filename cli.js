@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import 'colors';
-import Kludgy from 'kludgy';
-import yargs from 'yargs';
-import pkg from '../package.json';
-import util from './util.js';
+require('colors');
+const Kludgy = require('kludgy');
+const yargs = require('yargs');
+const pkg = require('./package.json');
+const util = require('./lib/util');
 
 module.exports = (() => {
 
